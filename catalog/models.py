@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
+from django.views import generic
 from django.urls import reverse
 import uuid
 
@@ -44,12 +45,13 @@ class Book(models.Model):
     def __str__(self):
         return f"{self.title}"
     def get_absolute_url(self):
-        return reverse('book-detail',args=[str(self.id)])
+        return reverse('book-detail',args=[str(self.id)]) 
     def display_genre(self):
         return ', '.join(genre.name for genre in self.genre.all()[:3])
 
     display_genre.short_description = 'Genre'
     
+
 class BookInstance(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,
                           help_text="Unique ID for this particular book across whole library")
