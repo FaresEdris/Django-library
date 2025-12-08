@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Author,Language,Genre,Book,BookInstance
+from django.views import generic
 
 def index(request):
     authors_num = Author.objects.count()
@@ -14,3 +15,16 @@ def index(request):
         'num_authors': authors_num,
     }
     return render(request,"catalog/index.html",context)
+
+class BookListView(generic.ListView):
+    model =Book
+    paginate_by = 2
+
+class BookDetailView(generic.DetailView):
+    model = Book
+
+class AuthorListView(generic.ListView):
+    model = Author
+
+class AuthorDetailView(generic.DetailView):
+    model = Author
