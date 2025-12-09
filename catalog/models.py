@@ -4,6 +4,8 @@ from django.db.models.functions import Lower
 from django.views import generic
 from django.urls import reverse
 import uuid
+from django.contrib.auth.models import User
+from datetime import date
 
 class Genre(models.Model):
     name = models.CharField(max_length=64, unique=True ,help_text="enter the books genre")
@@ -60,12 +62,19 @@ class BookInstance(models.Model):
     due_back = models.DateField(null=True,blank=True)
     LOAN_STATUS = (('m', 'Maintenance'),('o', 'On loan'),('a', 'Available'),('r', 'Reserved'),)
     status = models.CharField(max_length=1,choices=LOAN_STATUS,blank=True,default='m',help_text="Book availability")
+    borrower = models.ForeignKey(User,on_delete=models.SET_NULL,null=True,blank=True)
     
     class Meta:
         ordering = ["-due_back"]
+        permissions = (("can_mark_returned", "Set book as returned"),)
 
     def __str__(self):
         return f'{self.id} ({self.book.title})'
+    
+    def is_overdue(self):
+        return bool(self.due_back and date.today() > self.due_back)
+
+
 
 class Author(models.Model):
     first_name = models.CharField(max_length=100)
