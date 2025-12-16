@@ -125,3 +125,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
+
+from django.core.management.commands.runserver import Command as runserver
+runserver.default_port = '8080' # Set your desired default port

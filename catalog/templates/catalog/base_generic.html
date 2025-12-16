@@ -42,7 +42,13 @@
 
   </ul>
   {% if perms.catalog.can_mark_returned %}
-    <a href="{% url 'staff' %}">Staff</a>
+    <ul class="sidebar-nav">
+    <li>Staff</li>
+    <li><a href="{% url 'staff' %}">All borrowed</a></li>
+    {% if perms.catalog.add_author  %}
+    <li><a href="{% url 'author-create' %}">Create author</a></li>
+    {% endif %}
+    </ul>
   {% endif %}
           {% endblock %}
         </div>
