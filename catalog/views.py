@@ -5,6 +5,7 @@ from .models import Author,Language,Genre,Book,BookInstance
 from django.views import generic
 from django.views.generic import CreateView,UpdateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse,reverse_lazy
@@ -34,6 +35,7 @@ class BookDetailView(generic.DetailView):
 
 class AuthorListView(generic.ListView):
     model = Author
+    paginate_by = 10
 
 class AuthorDetailView(generic.DetailView):
     model = Author
@@ -119,3 +121,28 @@ class BookDelete(DeleteView,PermissionRequiredMixin):
             return HttpResponseRedirect(self.success_url)
         except Exception as e:
             return HttpResponseRedirect(reverse('author-delete',kwargs={'pk':self.object.pk}))
+
+from catalog.forms import RenewBookForm
+
+@permission_required('catalog.can_mark_returned')
+def renew_book_librarian(request, pk):
+    book_instance = get_object_or_404(BookInstance, pk=pk)
+    if request.method == 'POST':
+        book_renewal_form = RenewBookForm(request.POST)
+        if book_renewal_form.is_valid():
+            book_instance.due_back = book_renewal_form.cleaned_data['renewal_date']
+            book_instance.save()
+
+            # redirect to a new URL:
+            return HttpResponseRedirect(reverse('all-borrowed'))
+
+    else:
+        proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
+        book_renewal_form = RenewBookForm(initial={'renewal_date': proposed_renewal_date})
+
+    context = {
+        'book_renewal_form': book_renewal_form,
+        'book_instance': book_instance,
+    }
+
+    return render(request, 'catalog/book_renew_librarian.html', context)
