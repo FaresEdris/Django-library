@@ -3,7 +3,7 @@ click==8.3.1
 colorama==0.4.6
 cssbeautifier==1.15.4
 dj-database-url==3.0.1
-Django==6.0
+Django==4.2
 djlint==1.36.4
 EditorConfig==0.17.1
 gunicorn==23.0.0
