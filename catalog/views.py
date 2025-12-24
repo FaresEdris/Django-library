@@ -24,7 +24,7 @@ def index(request):
         'num_instances_available': avail_book_instance,
         'num_authors': authors_num,
     }
-    return render(request,"catalog/index.html",context)
+    return render(request,"index.html",context)
 
 class BookListView(generic.ListView):
     model =Book
@@ -43,7 +43,7 @@ class AuthorDetailView(generic.DetailView):
 class LoanedBooksByUserListView(LoginRequiredMixin,generic.ListView):
     model = BookInstance
     paginate_by = 10
-    template_name = 'catalog/bookinstance_list_borrowed_user.html'
+    template_name = 'bookinstance_list_borrowed_user.html'
 
     def get_queryset(self) -> QuerySet[Any]:
         return (BookInstance.objects.filter(borrower=self.request.user)
@@ -55,7 +55,7 @@ class StaffView(PermissionRequiredMixin,generic.ListView):
     permission_required = 'catalog.can_mark_returned'
     model = BookInstance
     paginate_by = 10
-    template_name = 'catalog/staff_view.html'
+    template_name = 'staff_view.html'
 
     def get_queryset(self) -> QuerySet[Any]:
         return (BookInstance.objects.filter(status__exact='o').order_by('due_back'))
@@ -78,7 +78,7 @@ def renew_book_librarian(request,pk):
         'book_instance': book_instance,
     }
 
-    return render(request, 'catalog/book_renew_librarian.html', context)
+    return render(request, 'book_renew_librarian.html', context)
 
 class AuthorCreate(CreateView,PermissionRequiredMixin):
     model=Author
@@ -145,4 +145,4 @@ def renew_book_librarian(request, pk):
         'book_instance': book_instance,
     }
 
-    return render(request, 'catalog/book_renew_librarian.html', context)
+    return render(request, 'book_renew_librarian.html', context)
