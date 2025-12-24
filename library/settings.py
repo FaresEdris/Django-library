@@ -31,7 +31,7 @@ DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = ['.pythonanywhere.com','127.0.0.1']
 
-
+CSRF_TRUSTED_ORIGINS=['https://faresedris.pythonanywhere.com/']
 # Application definition
 
 INSTALLED_APPS = [
