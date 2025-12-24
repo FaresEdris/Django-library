@@ -1,6 +1,5 @@
 from typing import Any
 from django.db.models.query import QuerySet
-from django.shortcuts import render
 from .models import Author,Language,Genre,Book,BookInstance
 from django.views import generic
 from django.views.generic import CreateView,UpdateView,DeleteView
@@ -24,7 +23,7 @@ def index(request):
         'num_instances_available': avail_book_instance,
         'num_authors': authors_num,
     }
-    return render(request,"index.html",context)
+    return render(request,"catalog/index.html",context)
 
 class BookListView(generic.ListView):
     model =Book
@@ -78,7 +77,7 @@ def renew_book_librarian(request,pk):
         'book_instance': book_instance,
     }
 
-    return render(request, 'book_renew_librarian.html', context)
+    return render(request, 'catalog/book_renew_librarian.html', context)
 
 class AuthorCreate(CreateView,PermissionRequiredMixin):
     model=Author
@@ -145,4 +144,4 @@ def renew_book_librarian(request, pk):
         'book_instance': book_instance,
     }
 
-    return render(request, 'book_renew_librarian.html', context)
+    return render(request, 'catalog/book_renew_librarian.html', context)
